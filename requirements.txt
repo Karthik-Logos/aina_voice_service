@@ -1,0 +1,14 @@
+livekit-agents[google]~=1.0
+livekit-plugins-noise-cancellation~=0.2
+python-dotenv
+livekit-agents[silero]~=1.0
+torch
+livekit-agents[silero,turn_detector] 
+livekit-agents[turn-detector]~=1.0
+uvicorn
+fastapi
+# faiss-cpu
+# simsimd 
+livekit  
+# sentence-transformers
+numpy 
