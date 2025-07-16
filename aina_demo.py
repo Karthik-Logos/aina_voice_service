@@ -10,7 +10,9 @@ from livekit.plugins import  silero
 from livekit.plugins import noise_cancellation
 from livekit.agents import ChatContext
 # from prompt_s import agent_prompt
-from prompts.prompt_for_exact_replica import agent_prompt
+# from prompts.prompt_for_exact_replica import agent_prompt
+from prompts.replica1 import agent_prompt
+
 
 # from prompts import get_engagement_prompt , get_counselling_prompt , get_insights_prompt , get_router_prompt
 from livekit.plugins import (
@@ -80,7 +82,17 @@ RunContext_T = RunContext[UserData]
 #     async def transfer_to_couse_enollment(self) -> Agent:
 #         """Use this tool when the user wants to enroll in Bridge course."""
 #         return CourseAgent(chat_ctx=self.chat_ctx)
-    
+
+
+@dataclass
+class QuizResponse:
+    question: str
+    selected_option: str
+
+
+    def __repr__(self):
+        return f"QuizResponse(question={self.question}, selected_option={self.selected_option})"
+
 class Engagement(Agent):
     def __init__(self, chat_ctx: ChatContext = None) -> None:
         prompt = agent_prompt('engagement')
@@ -123,6 +135,12 @@ class Quiz(Agent):
         await self.session.generate_reply(
             instructions=f"Greet the user and introduce yourself briefly as the Quiz agent."
         )
+
+    @function_tool
+    async def store_quiz_responses(quiz_responses: list[QuizResponse]):
+        "used to store the quiz responses along with the questions"
+        print(quiz_responses)
+        return "quiz responses stored successfully"
 
     @function_tool
     async def transfer_to_insights(self) -> Agent:
@@ -186,6 +204,11 @@ class CounsellingAgent(Agent):
         await self.session.generate_reply(
             instructions=f"Greet the user and introduce yourself briefly as the counselling agent."
         )
+
+    @function_tool
+    async def store_counselling_details(father_name:str , phone_number:str , study_mode:str , counselling_date:str , counselling_time:str):
+        print(father_name, phone_number, study_mode, counselling_date , counselling_time)
+        return "counselling details stored successfully"
 
     @function_tool
     async def transfer_to_couse_enollment(self) -> Agent:
